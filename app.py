@@ -1,40 +1,32 @@
+import matplotlib.pyplot as plt
 import numpy as np
 import panel as pn
-from bokeh.plotting import figure
 
-pn.extension(design="material")  # light default, small payload
+pn.extension(design="material")  # minimal load, good style
 
-# -----------------------
 # Widgets
-# -----------------------
-freq = pn.widgets.FloatSlider(name="Frequency (f)", start=0.1, end=5.0, step=0.1, value=1.0)
-amp  = pn.widgets.FloatSlider(name="Amplitude (A)", start=0.1, end=2.0, step=0.1, value=1.0)
+freq = pn.widgets.FloatSlider(name='Frequency', start=1, end=10, step=0.1, value=2)
+amp = pn.widgets.FloatSlider(name='Amplitude', start=0.1, end=5, step=0.1, value=1)
 
-# -----------------------
-# Plot function
-# -----------------------
-def make_plot(f, a):
-    x = np.linspace(0, 2*np.pi, 600)
-    y = a * np.sin(f * x)
-    p = figure(height=350, sizing_mode="stretch_width", title="y = A · sin(f · x)")
-    p.line(x, y, line_width=2)
-    p.xaxis.axis_label = "x"
-    p.yaxis.axis_label = "y"
-    return p
+# Plotting function
+def plot_sine(frequency, amplitude):
+    x = np.linspace(0, 2 * np.pi, 500)
+    y = amplitude * np.sin(frequency * x)
+    fig, ax = plt.subplots()
+    ax.plot(x, y)
+    ax.set_title(f'Sine Wave: {frequency:.1f} Hz, {amplitude:.1f}x')
+    ax.set_xlabel('x')
+    ax.set_ylabel('y')
+    return fig
 
-# -----------------------
-# Bind (exact style you use)
-# -----------------------
-plot = pn.bind(make_plot, f=freq, a=amp)
+# Bind the function to the widgets
+interactive_plot = pn.bind(plot_sine, freq, amp)
 
-# -----------------------
-# Simple layout
-# -----------------------
-app = pn.Column(
-    pn.pane.Markdown("## Simple Bound Plot (one figure, two sliders)"),
+# Layout
+dashboard = pn.Column(
+    "# 🎛️ Interactive Sine Plot",
     pn.Row(freq, amp),
-    plot,
-    sizing_mode="stretch_width"
+    pn.pane.Matplotlib(interactive_plot, tight=True),
 )
 
-app.servable()
+dashboard.servable()
