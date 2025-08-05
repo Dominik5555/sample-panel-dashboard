@@ -1,8 +1,7 @@
 services:
   - type: web
-    name: sample-panel-app
+    name: sample-panel-dashboard
     env: python
     plan: free
     buildCommand: pip install -r requirements.txt
-    startCommand: startCommand: panel serve app.py --address 0.0.0.0 --port 10000 --allow-websocket-origin=sample-panel-dashboard-xyz.onrender.com
-
+    startCommand: panel serve app.py --address 0.0.0.0 --port 10000 --allow-websocket-origin=sample-panel-dashboard.onrender.com
